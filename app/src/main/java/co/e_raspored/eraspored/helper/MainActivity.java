@@ -21,7 +21,7 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_main);
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment())
+					.add(R.id.container, new MainFragment())
 					.commit();
 		}
 	}
@@ -51,9 +51,9 @@ public class MainActivity extends ActionBarActivity {
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment {
+	public static class MainFragment extends Fragment {
 
-		public PlaceholderFragment() {
+		public MainFragment() {
 		}
 
 		@Override
