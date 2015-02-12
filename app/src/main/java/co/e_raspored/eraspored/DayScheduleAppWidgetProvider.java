@@ -3,9 +3,11 @@ package co.e_raspored.eraspored;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.widget.RemoteViews;
 
-import java.util.ArrayList;
+import co.e_raspored.eraspored.service.widget.DayScheduleWidgetService;
 
 /**
  * Created by Nicba on 11.2.2015..
@@ -20,24 +22,32 @@ public class DayScheduleAppWidgetProvider extends AppWidgetProvider {
 			int appWidgetId = appWidgetIds[i];
 			// Get the layout for the App Widget and attach an on-click listener
 			// to the button
-			RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.dayschedule_appwidget);
+			RemoteViews remoteViews = updateWidgetListView(context,
+					appWidgetIds[i]);
 
 			// Tell the AppWidgetManager to perform an update on the current app widget
-			appWidgetManager.updateAppWidget(appWidgetId, views);
+			appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
 		}
 	}
 
-	public DayScheduleItem createSchedulePart(int num, String subject) {
-		return new DayScheduleItem(num, subject);
-	}
+	private RemoteViews updateWidgetListView(Context context,
+											 int appWidgetId) {
+		//which layout to show on widget
+		RemoteViews remoteViews = new RemoteViews(
+				context.getPackageName(), R.layout.dayschedule_appwidget);
 
-	public DayScheduleItem[] createSchedule() {
-		ArrayList<DayScheduleItem> array = new ArrayList<DayScheduleItem>();
-		array.add(createSchedulePart(1, "MAT"));
-		array.add(createSchedulePart(2, "HRV"));
-		array.add(createSchedulePart(3, "RAC"));
-		array.add(createSchedulePart(4, "TZK"));
-		array.add(createSchedulePart(5, "ESKL"));
-		return array.toArray(new DayScheduleItem[array.size()]);
+		//RemoteViews Service needed to provide adapter for ListView
+		Intent svcIntent = new Intent(context, DayScheduleWidgetService.class);
+		//passing app widget id to that RemoteViews Service
+		svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+		//setting a unique Uri to the intent
+		//don't know its purpose to me right now
+		svcIntent.setData(Uri.parse(
+				svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
+		//setting adapter to listview of the widget
+		remoteViews.setRemoteAdapter(R.id.dayScheduleListView, svcIntent);
+		//setting an empty view in case of no data
+		remoteViews.setEmptyView(R.id.dayScheduleListView, R.id.empty_view);
+		return remoteViews;
 	}
 }

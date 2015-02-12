@@ -17,7 +17,10 @@
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
-		<receiver android:name="DayScheduleAppWidgetProvider">
+		<service
+			android:name=".service.widget.DayScheduleWidgetService"
+			android:permission="android.permission.BIND_REMOTEVIEWS"/>
+		<receiver android:name=".DayScheduleAppWidgetProvider">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
 			</intent-filter>

@@ -1,7 +1,7 @@
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
-	android:layout_height="?android:attr/listPreferredItemHeight"
+	android:layout_height="fill_parent"
 	android:orientation="horizontal"
 	android:padding="6dip">
 
@@ -15,6 +15,7 @@
 		android:contentDescription="TODO"
 		android:gravity="center"
 		android:text="1."
+		android:textColor="@android:color/black"
 		android:textSize="32sp"/>
 
 	<TextView
@@ -26,5 +27,6 @@
 		android:layout_weight=".80"
 		android:gravity="left|center_vertical"
 		android:text="Predmet"
+		android:textColor="@android:color/black"
 		android:textSize="24sp"/>
 </LinearLayout>
