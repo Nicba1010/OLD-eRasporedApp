@@ -8,8 +8,8 @@ import android.widget.RemoteViewsService;
 
 import java.util.ArrayList;
 
-import co.e_raspored.eraspored.DayScheduleItem;
 import co.e_raspored.eraspored.R;
+import co.e_raspored.eraspored.helper.DayScheduleItem;
 
 /**
  * Created by Nicba on 12.2.2015..
