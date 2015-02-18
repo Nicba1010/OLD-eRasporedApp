@@ -4,5 +4,10 @@
     <string name="app_name">eRaspored</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
+	<string-array name="rezrediarray">
+		<item>3.A</item>
+	</string-array>
+	<string-array name="skolearray">
+		<item>Tehnicka škola Ruđera Boškovića</item>
+	</string-array>
 </resources>

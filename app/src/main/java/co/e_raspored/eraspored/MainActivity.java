@@ -1,4 +1,4 @@
-package co.e_raspored.eraspored.helper;
+package co.e_raspored.eraspored;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,8 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import co.e_raspored.eraspored.R;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -60,6 +60,22 @@ public class MainActivity extends ActionBarActivity {
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 								 Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+			Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner);
+// Create an ArrayAdapter using the string array and a default spinner layout
+			ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(rootView.getContext(),
+					R.array.rezrediarray, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+			spinner.setAdapter(adapter);
+			Spinner spinner1 = (Spinner) rootView.findViewById(R.id.spinner1);
+// Create an ArrayAdapter using the string array and a default spinner layout
+			ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(rootView.getContext(),
+					R.array.skolearray, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+			spinner1.setAdapter(adapter1);
 			Log.d("APPTEST", rootView.toString());
 			return rootView;
 		}

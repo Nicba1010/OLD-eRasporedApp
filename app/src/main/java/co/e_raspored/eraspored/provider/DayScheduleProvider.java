@@ -86,10 +86,12 @@ public class DayScheduleProvider implements RemoteViewsService.RemoteViewsFactor
 	}
 
 	public void createSchedule() {
-		array.add(createSchedulePart(1, "MAT"));
-		array.add(createSchedulePart(2, "HRV"));
-		array.add(createSchedulePart(3, "RAC"));
-		array.add(createSchedulePart(4, "TZK"));
-		array.add(createSchedulePart(5, "ESKL"));
+		array.add(createSchedulePart(1, "Fizika"));
+		array.add(createSchedulePart(2, "Fizika"));
+		array.add(createSchedulePart(3, "Etika"));
+		array.add(createSchedulePart(4, "Sat Razrednog Odgoja"));
+		array.add(createSchedulePart(5, "Sklopovi"));
+		array.add(createSchedulePart(6, "Matematika"));
+		array.add(createSchedulePart(7, "Informacije i komunikacije"));
 	}
 }

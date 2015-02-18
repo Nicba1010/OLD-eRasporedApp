@@ -11,4 +11,7 @@ public class DayScheduleItem {
 		this.num = num;
 		this.subject = subject;
 	}
+
+	public DayScheduleItem() {
+	}
 }
