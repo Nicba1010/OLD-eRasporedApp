@@ -7,6 +7,7 @@ import android.os.Vibrator;
  * Created by Nicba on 23.1.2015..
  */
 public class GeneralHelper {
+	public static final String TAG = "eRaspored";
 	Context ctx;
 	Vibrator v;
 

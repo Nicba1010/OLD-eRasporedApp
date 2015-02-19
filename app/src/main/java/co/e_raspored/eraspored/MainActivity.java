@@ -1,5 +1,7 @@
 package co.e_raspored.eraspored;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -10,15 +12,33 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
+	public static MainActivity activity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		activity = this;
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new MainFragment())
@@ -59,25 +79,96 @@ public class MainActivity extends ActionBarActivity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 								 Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-			Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner);
-// Create an ArrayAdapter using the string array and a default spinner layout
-			ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(rootView.getContext(),
-					R.array.rezrediarray, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
-			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
-			spinner.setAdapter(adapter);
-			Spinner spinner1 = (Spinner) rootView.findViewById(R.id.spinner1);
-// Create an ArrayAdapter using the string array and a default spinner layout
-			ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(rootView.getContext(),
-					R.array.skolearray, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
-			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
-			spinner1.setAdapter(adapter1);
-			Log.d("APPTEST", rootView.toString());
+			final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+			final Spinner spinnerClasses = (Spinner) rootView.findViewById(R.id.spinnerClasses);
+			final Spinner spinnerSchools = (Spinner) rootView.findViewById(R.id.spinnerSchools);
+			Button loadData = (Button) rootView.findViewById(R.id.loadData);
+			Button save = (Button) rootView.findViewById(R.id.save);
+			loadData.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					new AsyncJSONGet(rootView).execute(new String[]{"http://e-raspored.co/ajax/getSchools.php"});
+				}
+			});
+			save.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Context context = getActivity();
+					SharedPreferences sharedPref = context.getSharedPreferences(
+							getString(R.string.pref), Context.MODE_PRIVATE);
+					SharedPreferences.Editor editor = sharedPref.edit();
+					editor.putString("school", StringEscapeUtils.escapeHtml(spinnerSchools.getSelectedItem().toString()));
+					editor.putString("class", spinnerClasses.getSelectedItem().toString());
+					editor.commit();
+				}
+			});
+			List<String> schoolArray = new ArrayList<String>();
+			HashMap<String, ArrayList<String>> classMap = new HashMap<String, ArrayList<String>>();
+			new AsyncJSONGet(rootView).execute(new String[]{"http://e-raspored.co/ajax/getSchools.php"});
+			try {
+				String json = readFromFile("data.json");
+				if (!json.equalsIgnoreCase("FILENOTFOUND")) {
+					JSONObject jsonData = new JSONObject(json);
+					Iterator<?> keys = jsonData.keys();
+					while (keys.hasNext()) {
+						String key = (String) keys.next();
+						schoolArray.add(StringEscapeUtils.unescapeHtml(key));
+						try {
+							ArrayList<String> classList = new ArrayList<String>();
+							JSONObject jsonData1 = jsonData1 = jsonData.getJSONObject(key);
+							JSONArray classes = jsonData1.getJSONArray("classData");
+							for (int i = 0; i < classes.length(); i++) {
+								classList.add(classes.getJSONObject(i).getString("class"));
+							}
+							classMap.put(StringEscapeUtils.unescapeHtml(key), classList);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+					ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+							rootView.getContext(), android.R.layout.simple_spinner_item, schoolArray);
+					adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+					spinnerSchools.setAdapter(adapter);
+					ArrayAdapter<String> adapterClass = new ArrayAdapter<String>(
+							rootView.getContext(), android.R.layout.simple_spinner_item, classMap.get(spinnerSchools.getSelectedItem().toString()));
+					adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+					spinnerClasses.setAdapter(adapterClass);
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
 			return rootView;
+		}
+
+		private String readFromFile(String fileName) {
+
+			String ret = "FILENOTFOUND";
+
+			try {
+				InputStream inputStream = getActivity().openFileInput(fileName);
+
+				if (inputStream != null) {
+					InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+					BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+					String receiveString = "";
+					StringBuilder stringBuilder = new StringBuilder();
+
+					while ((receiveString = bufferedReader.readLine()) != null) {
+						stringBuilder.append(receiveString);
+					}
+
+					inputStream.close();
+					ret = stringBuilder.toString();
+				}
+			} catch (FileNotFoundException e) {
+				Log.e("login activity", "File not found: " + e.toString());
+			} catch (IOException e) {
+				Log.e("login activity", "Can not read file: " + e.toString());
+			}
+
+			return ret;
 		}
 	}
 }

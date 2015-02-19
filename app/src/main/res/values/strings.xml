@@ -10,4 +10,5 @@
 	<string-array name="skolearray">
 		<item>Tehnicka škola Ruđera Boškovića</item>
 	</string-array>
+	<string name="pref">co.e_raspored.eraspored.wpref</string>
 </resources>
