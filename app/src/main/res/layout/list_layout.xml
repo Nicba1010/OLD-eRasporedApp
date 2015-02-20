@@ -1,4 +1,4 @@
-<LinearLayout
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
@@ -7,12 +7,9 @@
 
 	<TextView
 		android:id="@+id/num"
-		android:layout_width="0dp"
+		android:layout_width="wrap_content"
 		android:layout_height="fill_parent"
-		android:layout_alignParentBottom="true"
-		android:layout_alignParentTop="true"
-		android:layout_weight=".20"
-		android:contentDescription="TODO"
+		android:layout_alignParentLeft="true"
 		android:gravity="center"
 		android:text="1."
 		android:textColor="@android:color/black"
@@ -20,13 +17,21 @@
 
 	<TextView
 		android:id="@+id/subject"
-		android:layout_width="0dp"
+		android:layout_width="wrap_content"
 		android:layout_height="fill_parent"
-		android:layout_alignParentBottom="true"
-		android:layout_alignParentRight="true"
-		android:layout_weight=".80"
+		android:layout_toRightOf="@+id/num"
 		android:gravity="left|center_vertical"
 		android:text="Predmet"
 		android:textColor="@android:color/black"
-		android:textSize="24sp"/>
-</LinearLayout>
+		android:textSize="20sp"/>
+
+	<TextView
+		android:id="@+id/ends"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_alignParentRight="true"
+		android:gravity="right|center_vertical"
+		android:text="XX:XX"
+		android:textColor="@android:color/black"
+		android:textSize="20sp"/>
+</RelativeLayout>
